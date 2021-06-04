@@ -1,0 +1,9 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+<@layout.myLayout "Success :: url-shortener">
+<div class="container_inner">
+  <h1>Your shortened URL</h1>
+  <section class="result-container">
+    ${url}
+  </section>
+</div>
+</@layout.myLayout>

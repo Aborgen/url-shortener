@@ -1,0 +1,13 @@
+<#import "../layout/defaultLayout.ftl.html" as layout>
+<@layout.myLayout "Shortify It :: url-shortener">
+ <div class="container_inner">
+   <h1>Enter URL to ${shortVariant}</h1>
+   <section class="request-container">
+     <form class="form request-item" action="/api/shorten" method="POST">
+       <input class="text-input request-item_inner request-item_input" name="url" placeholder="https://example.com" required />
+       <div class="request-item_inner request-item_separator"></div>
+       <button class="button request-item_inner request-item_button" type="submit">submit</button>
+     </form>
+   </section>
+ </div>
+</@layout.myLayout>
