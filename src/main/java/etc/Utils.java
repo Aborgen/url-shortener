@@ -16,6 +16,10 @@ public class Utils {
     }
   }
 
+  public static long maxValueGivenNDigits(int digitCount) {
+   return (long) (Math.pow(BASE, digitCount) - 1);
+  }
+
   public static String convertDigit(long n) {
     StringBuilder result = new StringBuilder();
     do {
