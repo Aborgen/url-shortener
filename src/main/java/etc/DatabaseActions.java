@@ -1,6 +1,10 @@
 package etc;
 
+import java.util.Set;
+
 public interface DatabaseActions {
   String getEntry(String key);
-  void setEntry(String key, String value);
+  boolean setEntry(String key, String value);
+  int getUrlCardinality();
+  Set<String> getCurrentUrlGroup();
 }

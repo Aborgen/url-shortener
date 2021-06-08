@@ -3,6 +3,13 @@ package etc;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Transaction;
+import redis.clients.jedis.exceptions.JedisDataException;
+import redis.clients.jedis.exceptions.JedisException;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 
 public class DatabaseActionsImpl implements DatabaseActions {
   Jedis jedis;
@@ -21,7 +28,34 @@ public class DatabaseActionsImpl implements DatabaseActions {
   }
 
   @Override
-  public void setEntry(String key, String value) {
-    jedis.set(key, value);
+  public boolean setEntry(String key, String value) {
+    if (getEntry(key) != null) {
+      return false;
+    }
+
+    String digitCount = _getUrlCardinality();
+    long time = Instant.now().getEpochSecond();
+    Transaction t = jedis.multi();
+    // TODO: What happens if there is an error in one of these operations, but not the other? Seems like there would be an issue if adding to the sorted set fails, but setnx doesn't
+    t.zadd(digitCount, time, key);
+    t.setnx(key, value);
+    List<Object> result = t.exec();
+    // Per https://github.com/redis/jedis/blob/4f96e123e42e3265cfe05c0325a9d9793a38e1e2/src/main/java/redis/clients/jedis/Transaction.java#L46-L56
+    return !(result == null || result.stream().anyMatch(JedisDataException.class::isInstance));
+  }
+
+  @Override
+  public int getUrlCardinality() {
+    return Integer.parseInt(_getUrlCardinality());
+  }
+
+  private String _getUrlCardinality() {
+    return jedis.get("CURRENT_DIGIT_COUNT");
+  }
+
+  @Override
+  public Set<String> getCurrentUrlGroup() {
+    String digitCount = _getUrlCardinality();
+    return jedis.smembers(digitCount);
   }
 }
