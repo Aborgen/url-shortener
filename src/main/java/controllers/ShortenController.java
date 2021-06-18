@@ -8,6 +8,7 @@ import ninja.Result;
 import ninja.Results;
 import ninja.params.Param;
 import ninja.session.FlashScope;
+import ninja.utils.NinjaProperties;
 
 @Singleton
 public class ShortenController {
@@ -30,18 +31,23 @@ public class ShortenController {
     return Results.redirect("/");
   }
 
+  @Inject
+  NinjaProperties ninjaProperties;
   private String shorten(String url) {
     if (!Utils.validateUrl(url)) {
       flashErrorMessage = String.format("Invalid URL: '%s'", url);
       return null;
     }
 
-    boolean result = db.setEntry("0", url);
+    int digitCount = db.getUrlCardinality();
+    String token = Utils.getAvailableUrl(digitCount);
+//    int score = Utils.base64ToInt(&key);
+    boolean result = db.setEntry(token, url, 5);
     if (!result) {
       flashErrorMessage = String.format("There was an issue generating your shortened url. Please try again.", url);
       return null;
     }
 
-    return url;
+    return String.format("%s/%s", ninjaProperties.get("server_full"), token);
   }
 }

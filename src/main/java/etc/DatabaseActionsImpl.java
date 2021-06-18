@@ -28,16 +28,15 @@ public class DatabaseActionsImpl implements DatabaseActions {
   }
 
   @Override
-  public boolean setEntry(String key, String value) {
+  public boolean setEntry(String key, String value, int score) {
     if (getEntry(key) != null) {
       return false;
     }
 
     String digitCount = _getUrlCardinality();
-    long time = Instant.now().getEpochSecond();
     Transaction t = jedis.multi();
     // TODO: What happens if there is an error in one of these operations, but not the other? Seems like there would be an issue if adding to the sorted set fails, but setnx doesn't
-    t.zadd(digitCount, time, key);
+    t.zadd(digitCount, score, key);
     t.setnx(key, value);
     List<Object> result = t.exec();
     // Per https://github.com/redis/jedis/blob/4f96e123e42e3265cfe05c0325a9d9793a38e1e2/src/main/java/redis/clients/jedis/Transaction.java#L46-L56
