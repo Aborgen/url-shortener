@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
   final static int BASE = 64;
-  final static String base64Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-";
+  final static String base64Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$-";
   final static File combinationsDir = new File("./combinations");
 
   // TODO: Make this method more robust
