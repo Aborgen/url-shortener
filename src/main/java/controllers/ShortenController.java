@@ -41,8 +41,8 @@ public class ShortenController {
 
     int digitCount = db.getUrlCardinality();
     String token = Utils.getAvailableUrl(digitCount);
-//    int score = Utils.base64ToInt(&key);
-    boolean result = db.setEntry(token, url, 5);
+    int score = Utils.base64ToInt(token);
+    boolean result = db.setEntry(token, url, score);
     if (!result) {
       flashErrorMessage = String.format("There was an issue generating your shortened url. Please try again.", url);
       return null;

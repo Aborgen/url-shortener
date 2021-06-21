@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
@@ -31,7 +32,13 @@ public class Utils {
   }
 
   public static int base64ToInt(String s) {
-    throw new UnsupportedOperationException("Unimplemented");
+    int result = 0;
+    for (int i = 0; i < s.length(); ++i) {
+      char c = s.charAt(i);
+      result = result * 64 + base64Chars.indexOf(c);
+    }
+
+    return result;
   }
 
   @Inject
@@ -41,19 +48,13 @@ public class Utils {
 
   public static String getAvailableUrl(int digitCount) {
     File d = new File(String.format("%s/%s_digits", combinationsDir, digitCount));
-    System.out.println(d);
-    System.out.println("HERE IS THE DIR!");
     File[] files = d.listFiles();
     ThreadLocalRandom rand = ThreadLocalRandom.current();
     File file = files[rand.nextInt(files.length)];
-    System.out.println(file.toPath());
     String result = "";
     try (
       FileChannel fileChannel = FileChannel.open(file.toPath(), StandardOpenOption.READ);
     ) {
-
-      //          long position = ThreadLocalRandom.current().nextLong(0, urlCount + 1) * (THE_DIGIT + 1);
-
       // Urls are stored with a 1 byte separator between them.
       int tokenLength = digitCount + 1;
       ByteBuffer buf = ByteBuffer.allocate(digitCount);
