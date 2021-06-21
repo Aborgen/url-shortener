@@ -20,7 +20,6 @@ public class Utils {
   final static String base64Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$-";
   final static File combinationsDir = new File("./combinations");
 
-  // TODO: Make this method more robust
   public static boolean validateUrl(String url) {
     try {
       new URL(url);
