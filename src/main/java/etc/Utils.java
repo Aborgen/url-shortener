@@ -4,14 +4,16 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import ninja.utils.NinjaProperties;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -60,11 +62,30 @@ public class Utils {
       long position = rand.nextLong(fileChannel.size() / tokenLength) * tokenLength;
       fileChannel.read(buf, position);
       result = new String(buf.array(), StandardCharsets.UTF_8);
+      removeTokenFromFile(fileChannel, file.toPath(), position, position + tokenLength);
     }
     catch (IOException e) {
       e.printStackTrace();
     }
 
     return result;
+  }
+
+  // TODO: Move all file operations to separate class
+  private static void removeTokenFromFile(FileChannel from, Path filename, long tokenStart, long tokenEnd) throws IOException {
+    Path newFile = Files.createTempFile(null,null);
+    try (
+      FileChannel writer = FileChannel.open(newFile, StandardOpenOption.WRITE);
+    ) {
+      from.transferTo(0, tokenStart, writer);
+      from.transferTo(tokenEnd, from.size(), writer);
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    System.out.println(newFile.toAbsolutePath());
+    from.close();
+    Files.move(newFile, filename, StandardCopyOption.REPLACE_EXISTING);
   }
 }
