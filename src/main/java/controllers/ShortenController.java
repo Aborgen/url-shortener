@@ -41,6 +41,11 @@ public class ShortenController {
 
     int digitCount = db.getUrlCardinality();
     String token = Utils.getAvailableUrl(digitCount);
+    if (token == null) {
+      flashErrorMessage = String.format("We seem to have temporarily run out of shortened urls");
+      return null;
+    }
+
     int score = Utils.base64ToInt(token);
     boolean result = db.setEntry(token, url, score);
     if (!result) {

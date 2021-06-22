@@ -50,6 +50,10 @@ public class Utils {
   public static String getAvailableUrl(int digitCount) {
     File d = new File(String.format("%s/%s_digits", combinationsDir, digitCount));
     File[] files = d.listFiles();
+    if (files.length == 0) {
+      return null;
+    }
+
     ThreadLocalRandom rand = ThreadLocalRandom.current();
     File file = files[rand.nextInt(files.length)];
     String result = "";
@@ -59,10 +63,21 @@ public class Utils {
       // Urls are stored with a 1 byte separator between them.
       int tokenLength = digitCount + 1;
       ByteBuffer buf = ByteBuffer.allocate(digitCount);
-      long position = rand.nextLong(fileChannel.size() / tokenLength) * tokenLength;
-      fileChannel.read(buf, position);
+      if (fileChannel.size() < tokenLength) {
+        return null;
+      }
+      else if (fileChannel.size() == tokenLength) {
+        fileChannel.read(buf, 0);
+        fileChannel.close();
+        file.delete();
+      }
+      else {
+        long position = rand.nextLong(fileChannel.size() / tokenLength) * tokenLength;
+        System.out.println(fileChannel.size());
+        removeTokenFromFile(fileChannel, file.toPath(), position, position + tokenLength);
+      }
+
       result = new String(buf.array(), StandardCharsets.UTF_8);
-      removeTokenFromFile(fileChannel, file.toPath(), position, position + tokenLength);
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -84,7 +99,6 @@ public class Utils {
       e.printStackTrace();
     }
 
-    System.out.println(newFile.toAbsolutePath());
     from.close();
     Files.move(newFile, filename, StandardCopyOption.REPLACE_EXISTING);
   }
