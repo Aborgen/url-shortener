@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.inject.Inject;
 import etc.DatabaseActions;
+import etc.Utils;
 import ninja.Result;
 import ninja.Results;
 import ninja.params.PathParam;
@@ -18,6 +19,11 @@ public class RedirectController {
     String url = db.getEntry(fragment);
     if (url == null) {
       flashScope.error("There was in issue when attempting to redirect to the url.");
+      return Results.redirect("/");
+    }
+    else if (!Utils.validateUrl(url)) {
+      flashScope.error("There was in issue when attempting to redirect to the url.");
+      System.out.println(String.format("Issue: %s is stored at %s, and is not a valid URL", url, fragment));
       return Results.redirect("/");
     }
 
