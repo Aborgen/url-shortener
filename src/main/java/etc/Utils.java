@@ -68,12 +68,11 @@ public class Utils {
       }
       else if (fileChannel.size() == tokenLength) {
         fileChannel.read(buf, 0);
-        fileChannel.close();
         file.delete();
       }
       else {
         long position = rand.nextLong(fileChannel.size() / tokenLength) * tokenLength;
-        System.out.println(fileChannel.size());
+        fileChannel.read(buf, position);
         removeTokenFromFile(fileChannel, file.toPath(), position, position + tokenLength);
       }
 
