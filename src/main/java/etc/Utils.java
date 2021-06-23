@@ -1,24 +1,19 @@
 package etc;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import ninja.utils.NinjaProperties;
-
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
-  final static int BASE = 64;
   final static String base64Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$-";
   final static File combinationsDir = new File("./combinations");
 
@@ -40,11 +35,6 @@ public class Utils {
     }
 
     return result;
-  }
-
-  @Inject
-  public static String getRealizedUrl(@Named("server_full") String base) {
-    return base;
   }
 
   public static String getAvailableUrl(int digitCount) {
