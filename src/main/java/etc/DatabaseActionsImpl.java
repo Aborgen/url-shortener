@@ -5,11 +5,8 @@ import com.google.inject.name.Named;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 import redis.clients.jedis.exceptions.JedisDataException;
-import redis.clients.jedis.exceptions.JedisException;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 public class DatabaseActionsImpl implements DatabaseActions {
   Jedis jedis;
@@ -52,9 +49,5 @@ public class DatabaseActionsImpl implements DatabaseActions {
     return jedis.get("CURRENT_DIGIT_COUNT");
   }
 
-  @Override
-  public Set<String> getCurrentUrlGroup() {
-    String digitCount = _getUrlCardinality();
-    return jedis.smembers(digitCount);
   }
 }
