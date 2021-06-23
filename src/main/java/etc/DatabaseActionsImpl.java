@@ -45,9 +45,13 @@ public class DatabaseActionsImpl implements DatabaseActions {
     return Integer.parseInt(_getUrlCardinality());
   }
 
-  private String _getUrlCardinality() {
-    return jedis.get("CURRENT_DIGIT_COUNT");
+  @Override
+  // If the digit count key has not been set yet, set it to 1.
+  public void checkIntegrity() {
+    jedis.setnx("CURRENT_DIGIT_COUNT", "1");
   }
 
+  private String _getUrlCardinality() {
+    return jedis.get("CURRENT_DIGIT_COUNT");
   }
 }
