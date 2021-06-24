@@ -51,6 +51,11 @@ public class DatabaseActionsImpl implements DatabaseActions {
     jedis.setnx("CURRENT_DIGIT_COUNT", "1");
   }
 
+  @Override
+  public int incrementDigitCardinality() {
+    return jedis.incr("CURRENT_DIGIT_COUNT").intValue();
+  }
+
   private String _getUrlCardinality() {
     return jedis.get("CURRENT_DIGIT_COUNT");
   }
