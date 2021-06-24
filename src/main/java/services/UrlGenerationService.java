@@ -6,7 +6,11 @@ import etc.DatabaseActions;
 import etc.FileOperations;
 import etc.Utils;
 import ninja.lifecycle.Start;
+import ninja.scheduler.Schedule;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 
 @Singleton
@@ -18,5 +22,20 @@ public class UrlGenerationService {
   public void generateUrlFragmentCombinations() {
     FileOperations fileOperations = new FileOperations(db);
     fileOperations.generateCombinations();
+  }
+
+  @Schedule(delay = 120, initialDelay = 10, timeUnit = TimeUnit.SECONDS)
+  public void queryAvailableCombinations() {
+    int digitCount = db.getUrlCardinality();
+    File dir = Utils.getSpecificCombinationFile(digitCount);
+    if (Arrays.stream(dir.listFiles()).anyMatch(file -> file.length() > 0)) {
+      return;
+    }
+
+    int nextDigitCount = db.incrementDigitCardinality();
+    System.out.println(String.format("Incrementing CURRENT_DIGIT_COUNT to %s", nextDigitCount));
+    FileOperations fileOperations = new FileOperations(db);
+    fileOperations.generateCombinations();
+    System.out.println("Generating new combinations...");
   }
 }
