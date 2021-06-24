@@ -38,7 +38,7 @@ public class Utils {
   }
 
   public static String getAvailableUrl(int digitCount) {
-    File d = new File(String.format("%s/%s_digits", combinationsDir, digitCount));
+    File d = getSpecificCombinationFile(digitCount);
     File[] files = d.listFiles();
     if (files.length == 0) {
       return null;
@@ -73,6 +73,11 @@ public class Utils {
     }
 
     return result;
+  }
+
+  public static File getSpecificCombinationFile(int digitCount) {
+    final String suffix = "digits";
+    return new File(String.format("%s/%s_%s", combinationsDir, digitCount, suffix));
   }
 
   // TODO: Move all file operations to separate class
