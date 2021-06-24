@@ -2,3 +2,4 @@
 target/
 combinations/
 dependency-reduced-pom.xml
+generate-combinations
