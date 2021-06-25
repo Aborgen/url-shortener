@@ -3,6 +3,7 @@ package controllers;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import etc.DatabaseActions;
+import etc.FileOperations;
 import etc.Utils;
 import ninja.Result;
 import ninja.Results;
@@ -40,7 +41,8 @@ public class ShortenController {
     }
 
     int digitCount = db.getUrlCardinality();
-    String token = Utils.getAvailableUrl(digitCount);
+    FileOperations fileOperations = new FileOperations(db);
+    String token = fileOperations.getAvailableUrl(digitCount);
     if (token == null) {
       flashErrorMessage = String.format("We seem to have temporarily run out of shortened urls");
       return null;

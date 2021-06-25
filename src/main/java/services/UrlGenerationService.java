@@ -27,7 +27,7 @@ public class UrlGenerationService {
   @Schedule(delay = 120, initialDelay = 10, timeUnit = TimeUnit.SECONDS)
   public void queryAvailableCombinations() {
     int digitCount = db.getUrlCardinality();
-    File dir = Utils.getSpecificCombinationFile(digitCount);
+    File dir = FileOperations.getSubCombinationDir(digitCount);
     if (Arrays.stream(dir.listFiles()).anyMatch(file -> file.length() > 0)) {
       return;
     }

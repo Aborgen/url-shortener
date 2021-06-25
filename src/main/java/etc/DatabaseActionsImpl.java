@@ -32,7 +32,6 @@ public class DatabaseActionsImpl implements DatabaseActions {
 
     String digitCount = String.format("length_%s", _getUrlCardinality());
     Transaction t = jedis.multi();
-    // TODO: What happens if there is an error in one of these operations, but not the other? Seems like there would be an issue if adding to the sorted set fails, but setnx doesn't
     t.zadd(digitCount, score, key);
     t.setnx(key, value);
     List<Object> result = t.exec();
