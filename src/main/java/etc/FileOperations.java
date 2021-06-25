@@ -98,12 +98,11 @@ public class FileOperations {
     ) {
       from.transferTo(0, tokenStart, writer);
       from.transferTo(tokenEnd, from.size(), writer);
+      from.close();
+      Files.move(newFile, filename, StandardCopyOption.REPLACE_EXISTING);
     }
     catch (IOException e) {
       e.printStackTrace();
     }
-
-    from.close();
-    Files.move(newFile, filename, StandardCopyOption.REPLACE_EXISTING);
   }
 }
