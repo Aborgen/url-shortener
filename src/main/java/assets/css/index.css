@@ -28,6 +28,7 @@ html, body {
   align-items: center;
   border: 4px inset var(--white);
   border-radius: 1em;
+  position: relative;
 }
 
 .container_inner > h1 {
@@ -119,10 +120,38 @@ html, body {
   padding: 2%;
 }
 
+.error-box {
+  background: var(--error);
+  color: var(--orange);
+  height: 4em;
+  padding: 1%;
+  position:absolute;
+  top: 0;
+  border: 1px ridge gold;
+
+  animation-name: scroll-up;
+  animation-duration: 0.5s;
+  animation-delay: 5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes scroll-up {
+  from {
+    transform-origin: top;
+    transform: scaleY(1);
+  }
+
+  to {
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+}
+
 :root {
   --background: #7fee7f;
   --main-color: #37848c;
   --secondary-color: #24646a;
   --white: #d9d7d7;
-
+  --orange: #ffdcaf;
+  --error: #c61818;
 }
