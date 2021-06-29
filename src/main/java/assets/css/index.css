@@ -11,7 +11,7 @@ html, body {
   background: var(--background);
   height: 100vh;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column wrap;
   justify-content: center;
   align-items: center;
   font-size: 0.4rem;
@@ -118,6 +118,23 @@ html, body {
 .text-input {
   border: 5px inset var(--white);
   padding: 2%;
+}
+
+.navigator {
+  width: 50%;
+}
+
+.navigator ol {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.navigator__link {
+  text-decoration: none;
+  padding: 1%;
 }
 
 .error-box {
